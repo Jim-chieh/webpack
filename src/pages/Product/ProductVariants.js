@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
 import styled from 'styled-components';
+import { useCartItems, useUpdateCartItems } from '../../CartItemsContext';
 
 import add from './add.png';
 import minus from './minus.png';
@@ -126,7 +126,8 @@ function ProductVariants({ product }) {
 	const [selectedSize, setSelectedSize] = useState();
 	const [selectedSizeIndex, setSelectSizeIndex] = useState();
 	const [quantity, setQuantity] = useState(1);
-	const [cartItems, setCartItems] = useOutletContext();
+	const cartItems = useCartItems();
+	const setCartItems = useUpdateCartItems();
 
 	function getStock(colorCode, size) {
 		return product.variants.find(
