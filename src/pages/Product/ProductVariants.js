@@ -136,6 +136,16 @@ function ProductVariants({ product }) {
 		).stock;
 	}
 
+	function getQuantity(colorCode, size) {
+		let qty = 0;
+		cartItems.forEach(cartItem => {
+			if (cartItem.color.code === colorCode && cartItem.size === size) {
+				qty += cartItem.qty;
+			}
+		});
+		return qty;
+	}
+
 	function addToCart() {
 		if (!selectedSize) {
 			window.alert('請選擇尺寸');
@@ -199,14 +209,15 @@ function ProductVariants({ product }) {
 				<OptionName>尺寸｜</OptionName>
 				{product.sizes.map((size, index) => {
 					const stock = getStock(selectedColorCode, size);
+					const qty = getQuantity(selectedColorCode, size);
 					return (
 						<Size
 							key={size}
 							$isSelected={size === selectedSize}
-							$isDisabled={stock === 0}
+							$isDisabled={stock - qty <= 0}
 							onClick={() => {
 								const stock = getStock(selectedColorCode, size);
-								if (stock === 0) return;
+								if (stock - qty === 0) return;
 								setSelectedSize(size);
 								setSelectSizeIndex(index);
 								if (stock < quantity) setQuantity(1);
@@ -230,7 +241,8 @@ function ProductVariants({ product }) {
 					<IncrementButton
 						onClick={() => {
 							const stock = getStock(selectedColorCode, selectedSize);
-							if (!selectedSize || quantity === stock) return;
+							const qty = getQuantity(selectedColorCode, selectedSize);
+							if (!selectedSize || quantity >= stock - qty) return;
 							setQuantity(quantity + 1);
 						}}
 					/>
