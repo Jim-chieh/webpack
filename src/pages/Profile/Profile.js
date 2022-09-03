@@ -134,7 +134,6 @@ function Profile() {
 
 	useEffect(() => {
 		async function getProfile() {
-			let stylishToken = window.localStorage.getItem('stylishToken');
 			if (stylishToken) {
 				const { data } = await api.getProfile(stylishToken);
 				setProfile(data);
@@ -160,10 +159,12 @@ function Profile() {
 			const { data } = await api.getProfile(stylishToken);
 			setProfile(data);
 		}
+
 		if (!emailRef.current.includes('@')) {
 			alert('請輸入正確信箱格式!');
 			return;
 		}
+
 		if (checkSigninOrSignup === 'Sign in') {
 			let body = {
 				provider: 'native',
@@ -182,6 +183,7 @@ function Profile() {
 				return;
 			}
 		}
+
 		if (checkSigninOrSignup === 'Sign up') {
 			let body = {
 				name: nameRef.current,
