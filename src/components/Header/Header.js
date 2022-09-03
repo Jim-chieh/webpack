@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { useCartItems } from '../../CartItemsContext';
 
 import logo from './logo.png';
 import search from './search.png';
@@ -239,11 +240,12 @@ const categories = [
 	}
 ];
 
-function Header({ cartItems }) {
+function Header() {
 	const [inputValue, setInputValue] = useState('');
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
 	const category = searchParams.get('category');
+	const cartItems = useCartItems();
 
 	useEffect(() => {
 		if (category) setInputValue('');

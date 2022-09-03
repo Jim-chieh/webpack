@@ -133,7 +133,6 @@ function Profile() {
 	const passwordRef = useRef();
 
 	useEffect(() => {
-		// let stylishToken = window.localStorage.getItem('stylishToken');
 		async function getProfile() {
 			let stylishToken = window.localStorage.getItem('stylishToken');
 			if (stylishToken) {
@@ -194,7 +193,7 @@ function Profile() {
 				stylishToken = data.access_token;
 				window.localStorage.setItem('stylishToken', stylishToken);
 				getProfile();
-				alert('已經您登入!');
+				alert('您已登入!歡迎來到STYLiSH!');
 				return;
 			} catch (e) {
 				window.alert(e.message);
