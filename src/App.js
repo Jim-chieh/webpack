@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 import { Reset } from 'styled-reset';
+import { CartItemsProvider } from './CartItemsContext';
 
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
@@ -27,18 +28,14 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
-	const [cartItems, setCartItems] = useState(
-		JSON.parse(window.localStorage.getItem('cartItems')) || []
-	);
-
 	return (
-		<>
+		<CartItemsProvider>
 			<Reset />
 			<GlobalStyle />
-			<Header cartItems={cartItems} />
-			<Outlet context={[cartItems, setCartItems]} />
+			<Header />
+			<Outlet />
 			<Footer />
-		</>
+		</CartItemsProvider>
 	);
 }
 
