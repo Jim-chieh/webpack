@@ -27,19 +27,19 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
-  const [cartItems, setCartItems] = useState(
-    JSON.parse(window.localStorage.getItem('cartItems')) || []
-  );
+	const [cartItems, setCartItems] = useState(
+		JSON.parse(window.localStorage.getItem('cartItems')) || []
+	);
 
-  return (
-    <>
-      <Reset />
-      <GlobalStyle />
-      <Header cartItems={cartItems} />
-      <Outlet context={[cartItems, setCartItems]} />
-      <Footer />
-    </>
-  );
+	return (
+		<>
+			<Reset />
+			<GlobalStyle />
+			<Header cartItems={cartItems} />
+			<Outlet context={[cartItems, setCartItems]} />
+			<Footer />
+		</>
+	);
 }
 
 export default App;

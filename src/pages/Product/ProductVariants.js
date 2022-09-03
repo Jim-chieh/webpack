@@ -119,7 +119,6 @@ const AddToCart = styled.button`
 `;
 
 function ProductVariants({ product }) {
-	console.log(product);
 	const [selectedColorCode, setSelectedColorCode] = useState(
 		product.colors[0].code
 	);
@@ -128,7 +127,6 @@ function ProductVariants({ product }) {
 	const [selectedSizeIndex, setSelectSizeIndex] = useState();
 	const [quantity, setQuantity] = useState(1);
 	const [cartItems, setCartItems] = useOutletContext();
-	console.log(selectedColorIndex);
 
 	function getStock(colorCode, size) {
 		return product.variants.find(

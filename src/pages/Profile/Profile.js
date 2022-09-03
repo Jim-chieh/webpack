@@ -173,7 +173,6 @@ function Profile() {
 			};
 			try {
 				const { data } = await api.signin(body);
-				console.log(data.access_token);
 				stylishToken = data.access_token;
 				window.localStorage.setItem('stylishToken', stylishToken);
 				getProfile();
@@ -192,7 +191,6 @@ function Profile() {
 			};
 			try {
 				const { data } = await api.signup(body);
-				console.log(data.access_token);
 				stylishToken = data.access_token;
 				window.localStorage.setItem('stylishToken', stylishToken);
 				getProfile();
