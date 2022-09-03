@@ -55,7 +55,7 @@ const api = {
 		const response = await fetch(`${this.hostname}/user/profile`, {
 			headers: new Headers({
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${jwtToken}`
+				Authorization: `${jwtToken}`
 			})
 		});
 		return await response.json();
