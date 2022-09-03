@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import api from '../../utils/api';
-import getJwtToken from '../../utils/getJwtToken';
 
 const Wrapper = styled.div`
 	width: 500px;
@@ -115,27 +114,23 @@ function Profile() {
 		signinOrsignupList[0]
 	);
 	const [checkSigninOrSignupIndex, setCheckSigninOrSignupIndex] = useState(0);
+	let stylishToken = window.localStorage.getItem('stylishToken') || [];
 	const nameRef = useRef();
 	const emailRef = useRef();
 	const passwordRef = useRef();
 
 	useEffect(() => {
-		// async function getProfile() {
-		// 	let jwtToken = window.localStorage.getItem('jwtToken');
-		// 	if (!jwtToken) {
-		// 		try {
-		// 			jwtToken = await getJwtToken();
-		// 		} catch (e) {
-		// 			window.alert(e.message);
-		// 			return;
-		// 		}
-		// 	}
-		// 	window.localStorage.setItem('jwtToken', jwtToken);
-		// 	const { data } = await api.getProfile(jwtToken);
-		// 	setProfile(data);
-		// }
-		// getProfile();
+		// let stylishToken = window.localStorage.getItem('stylishToken');
+		async function getProfile() {
+			let stylishToken = window.localStorage.getItem('stylishToken');
+			if (stylishToken) {
+				const { data } = await api.getProfile(stylishToken);
+				setProfile(data);
+			}
+		}
+		getProfile();
 	}, []);
+	console.log(profile);
 
 	function handleNameChage(e) {
 		nameRef.current = e.target.value;
@@ -149,56 +144,98 @@ function Profile() {
 		passwordRef.current = e.target.value;
 	}
 
-	function handleSubmit() {
-		console.log(checkSigninOrSignup, 'click');
+	async function handleSubmit() {
+		if (!emailRef.current.includes('@')) {
+			alert('請輸入正確信箱格式!');
+			return;
+		}
+		if (checkSigninOrSignup === 'Sign in') {
+			let body = {
+				provider: 'native',
+				email: emailRef.current,
+				password: passwordRef.current
+			};
+			try {
+				const { data } = await api.signin(body);
+				console.log(data.access_token);
+				stylishToken = data.access_token;
+				window.localStorage.setItem('stylishToken', stylishToken);
+				return;
+			} catch (e) {
+				window.alert(e.message);
+				return;
+			}
+		}
+		if (checkSigninOrSignup === 'Sign up') {
+			let body = {
+				name: nameRef.current,
+				email: emailRef.current,
+				password: passwordRef.current
+			};
+			try {
+				const { data } = await api.signup(body);
+				console.log(data.access_token);
+				stylishToken = data.access_token;
+				window.localStorage.setItem('stylishToken', stylishToken);
+				return;
+			} catch (e) {
+				window.alert(e.message);
+				return;
+			}
+		}
 	}
 
-	return (
-		<Wrapper>
-			<TitleContianer>
-				{signinOrsignupList.map((signinOrsignup, index) => {
-					return (
-						<Title
-							key={index}
-							onClick={() => {
-								setCheckSigninOrSignup(signinOrsignup);
-								setCheckSigninOrSignupIndex(index);
-							}}
-							$isActive={checkSigninOrSignupIndex === index}
-						>
-							{signinOrsignup}
-						</Title>
-					);
-				})}
-			</TitleContianer>
+	if (stylishToken.length > 0) {
+		return <div>123</div>;
+	}
 
-			<>
-				<AccountInfoContainer
-					$display={checkSigninOrSignup === 'Sign in'}
-					$hasPadding={checkSigninOrSignup === 'Sign in'}
-				>
-					<Email placeholder="Email" onChange={handleEmailChage}></Email>
-					<Password
-						placeholder="Password"
-						type="password"
-						onChange={handlePasswordChage}
-					></Password>
-				</AccountInfoContainer>
-				<AccountInfoContainer $display={checkSigninOrSignup === 'Sign up'}>
-					<Name placeholder="Name" onChange={handleNameChage}></Name>
-					<Email placeholder="Email" onChange={handleEmailChage}></Email>
-					<Password
-						placeholder="Password"
-						type="password"
-						onChange={handlePasswordChage}
-					></Password>
-				</AccountInfoContainer>
-				<HandleLoginAndLogoutButton onClick={handleSubmit}>
-					{checkSigninOrSignup}
-				</HandleLoginAndLogoutButton>
-			</>
-		</Wrapper>
-	);
+	if (stylishToken.length <= 0) {
+		return (
+			<Wrapper>
+				<TitleContianer>
+					{signinOrsignupList.map((signinOrsignup, index) => {
+						return (
+							<Title
+								key={index}
+								onClick={() => {
+									setCheckSigninOrSignup(signinOrsignup);
+									setCheckSigninOrSignupIndex(index);
+								}}
+								$isActive={checkSigninOrSignupIndex === index}
+							>
+								{signinOrsignup}
+							</Title>
+						);
+					})}
+				</TitleContianer>
+				<>
+					<AccountInfoContainer
+						$display={checkSigninOrSignup === 'Sign in'}
+						$hasPadding={checkSigninOrSignup === 'Sign in'}
+					>
+						<Email placeholder="Email" onChange={handleEmailChage}></Email>
+						<Password
+							placeholder="Password"
+							type="password"
+							onChange={handlePasswordChage}
+						></Password>
+					</AccountInfoContainer>
+					<AccountInfoContainer $display={checkSigninOrSignup === 'Sign up'}>
+						<Name placeholder="Name" onChange={handleNameChage}></Name>
+						<Email placeholder="Email" onChange={handleEmailChage}></Email>
+						<Password
+							placeholder="Password"
+							type="password"
+							onChange={handlePasswordChage}
+						></Password>
+					</AccountInfoContainer>
+					<HandleLoginAndLogoutButton onClick={handleSubmit}>
+						{checkSigninOrSignup}
+					</HandleLoginAndLogoutButton>
+				</>
+			</Wrapper>
+		);
+	}
 }
 
 export default Profile;
