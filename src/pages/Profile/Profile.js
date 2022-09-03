@@ -177,6 +177,7 @@ function Profile() {
 				stylishToken = data.access_token;
 				window.localStorage.setItem('stylishToken', stylishToken);
 				getProfile();
+				alert('已經您登入!');
 				return;
 			} catch (e) {
 				window.alert(e.message);
@@ -195,6 +196,7 @@ function Profile() {
 				stylishToken = data.access_token;
 				window.localStorage.setItem('stylishToken', stylishToken);
 				getProfile();
+				alert('已經您登入!');
 				return;
 			} catch (e) {
 				window.alert(e.message);
@@ -206,6 +208,7 @@ function Profile() {
 	function handleLogout() {
 		window.localStorage.removeItem('stylishToken');
 		setProfile();
+		alert('已將您登出');
 	}
 
 	if (profile === undefined)
