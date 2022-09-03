@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import api from '../../utils/api';
+import avater from './Kermit_the_Frog.jpg';
 
 const Wrapper = styled.div`
 	width: 500px;
@@ -87,15 +88,18 @@ const Password = styled.input`
 		padding-left: 5px;
 	}
 `;
-// const Photo = styled.img`
-// 	margin-top: 24px;
-// `;
+const Photo = styled.img`
+	width: 250px;
+	height: 250px;
+	margin-top: 24px;
+	border-radius: 50%;
+`;
 
-// const Content = styled.div`
-// 	margin-top: 24px;
-// `;
+const Content = styled.div`
+	margin-top: 24px;
+`;
 
-const HandleLoginAndLogoutButton = styled.button`
+const HandleSigninAndSignupButton = styled.button`
 	width: 400px;
 	height: 40px;
 	margin-top: 24px;
@@ -104,6 +108,15 @@ const HandleLoginAndLogoutButton = styled.button`
 	border: 1px solid black;
 	border-radius: 10px;
 	background-color: rgb(207, 226, 243);
+	:hover {
+		cursor: pointer;
+	}
+`;
+
+const LogoutButton = styled(HandleSigninAndSignupButton)`
+	:hover {
+		cursor: pointer;
+	}
 `;
 
 const signinOrsignupList = ['Sign in', 'Sign up'];
@@ -130,7 +143,6 @@ function Profile() {
 		}
 		getProfile();
 	}, []);
-	console.log(profile);
 
 	function handleNameChage(e) {
 		nameRef.current = e.target.value;
@@ -145,6 +157,10 @@ function Profile() {
 	}
 
 	async function handleSubmit() {
+		async function getProfile() {
+			const { data } = await api.getProfile(stylishToken);
+			setProfile(data);
+		}
 		if (!emailRef.current.includes('@')) {
 			alert('請輸入正確信箱格式!');
 			return;
@@ -160,6 +176,7 @@ function Profile() {
 				console.log(data.access_token);
 				stylishToken = data.access_token;
 				window.localStorage.setItem('stylishToken', stylishToken);
+				getProfile();
 				return;
 			} catch (e) {
 				window.alert(e.message);
@@ -177,6 +194,7 @@ function Profile() {
 				console.log(data.access_token);
 				stylishToken = data.access_token;
 				window.localStorage.setItem('stylishToken', stylishToken);
+				getProfile();
 				return;
 			} catch (e) {
 				window.alert(e.message);
@@ -185,11 +203,12 @@ function Profile() {
 		}
 	}
 
-	if (stylishToken.length > 0) {
-		return <div>123</div>;
+	function handleLogout() {
+		window.localStorage.removeItem('stylishToken');
+		setProfile();
 	}
 
-	if (stylishToken.length <= 0) {
+	if (profile === undefined)
 		return (
 			<Wrapper>
 				<TitleContianer>
@@ -229,9 +248,21 @@ function Profile() {
 							onChange={handlePasswordChage}
 						></Password>
 					</AccountInfoContainer>
-					<HandleLoginAndLogoutButton onClick={handleSubmit}>
+					<HandleSigninAndSignupButton onClick={handleSubmit}>
 						{checkSigninOrSignup}
-					</HandleLoginAndLogoutButton>
+					</HandleSigninAndSignupButton>
+				</>
+			</Wrapper>
+		);
+
+	if (stylishToken.length > 0) {
+		return (
+			<Wrapper>
+				<>
+					<Photo src={profile.picture || avater}></Photo>
+					<Content>{profile.name}</Content>
+					<Content>{profile.email}</Content>
+					<LogoutButton onClick={handleLogout}>登出</LogoutButton>
 				</>
 			</Wrapper>
 		);
