@@ -119,12 +119,16 @@ const AddToCart = styled.button`
 `;
 
 function ProductVariants({ product }) {
+	console.log(product);
 	const [selectedColorCode, setSelectedColorCode] = useState(
 		product.colors[0].code
 	);
+	const [selectedColorIndex, setSelectedColorIndex] = useState(0);
 	const [selectedSize, setSelectedSize] = useState();
+	const [selectedSizeIndex, setSelectSizeIndex] = useState();
 	const [quantity, setQuantity] = useState(1);
 	const [cartItems, setCartItems] = useOutletContext();
+	console.log(selectedColorIndex);
 
 	function getStock(colorCode, size) {
 		return product.variants.find(
@@ -138,6 +142,22 @@ function ProductVariants({ product }) {
 			return;
 		}
 
+		for (let i = 0; i < cartItems.length; i++) {
+			if (
+				cartItems[i].name === product.title &&
+				cartItems[i]['color'].code ===
+					product.colors[selectedColorIndex].code &&
+				cartItems[i].size === product.sizes[selectedSizeIndex]
+			) {
+				cartItems[i].qty += quantity;
+				alert(`成功將  -${product.title}-  加入購物車`);
+				setSelectedSize();
+				setQuantity(1);
+				window.localStorage.setItem('cartItems', JSON.stringify(cartItems));
+
+				return;
+			}
+		}
 		const newCartItems = [
 			...cartItems,
 			{
@@ -161,13 +181,14 @@ function ProductVariants({ product }) {
 		<>
 			<Option>
 				<OptionName>顏色｜</OptionName>
-				{product.colors.map(color => (
+				{product.colors.map((color, index) => (
 					<Color
 						key={color.code}
 						$isSelected={color.code === selectedColorCode}
 						$colorCode={`#${color.code}`}
 						onClick={() => {
 							setSelectedColorCode(color.code);
+							setSelectedColorIndex(index);
 							setSelectedSize();
 							setQuantity(1);
 						}}
@@ -176,7 +197,7 @@ function ProductVariants({ product }) {
 			</Option>
 			<Option>
 				<OptionName>尺寸｜</OptionName>
-				{product.sizes.map(size => {
+				{product.sizes.map((size, index) => {
 					const stock = getStock(selectedColorCode, size);
 					return (
 						<Size
@@ -187,6 +208,7 @@ function ProductVariants({ product }) {
 								const stock = getStock(selectedColorCode, size);
 								if (stock === 0) return;
 								setSelectedSize(size);
+								setSelectSizeIndex(index);
 								if (stock < quantity) setQuantity(1);
 							}}
 						>
