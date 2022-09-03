@@ -264,7 +264,7 @@ function Profile() {
 					<Photo src={profile.picture || avater}></Photo>
 					<Content>{profile.name}</Content>
 					<Content>{profile.email}</Content>
-					<LogoutButton onClick={handleLogout}>登出</LogoutButton>
+					<LogoutButton onClick={handleLogout}>Log out</LogoutButton>
 				</>
 			</Wrapper>
 		);
