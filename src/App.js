@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 import { Reset } from 'styled-reset';
 import { CartItemsProvider } from './CartItemsContext';
 
+import banana from './banana';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 
@@ -27,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
+	banana();
 	return (
 		<CartItemsProvider>
 			<Reset />
